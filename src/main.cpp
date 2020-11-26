@@ -5,8 +5,7 @@
 // date: 24/20/2020 (MM/DD/YYYY)
 
 #include "piece.h"
-
-#include <vector>
+#include "map.h"
 
 #include <GL/glut.h>
 
@@ -31,12 +30,15 @@ static const GLubyte colors[] = {
 	0xFF, 0x00, 0x00
 };
 
-static int map[GAME_WIDTH * GAME_HEIGHT];
+// static int map[GAME_WIDTH * GAME_HEIGHT];
+static tetris::Map map(GAME_WIDTH, GAME_HEIGHT);
 
 tetris::Piece* active_piece;
 
 int x = 1;
 int y = 10;
+
+int speed = 1;
 
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -85,6 +87,13 @@ void keyboard(unsigned char key, int mouse_x, int mouse_y) {
 	glutPostRedisplay();
 }
 
+void update(int value) {
+	y -= 1;
+
+	glutPostRedisplay();
+	glutTimerFunc(1000/speed, update, 0);
+}
+
 void setup() {
     glPointSize(POINT_SIZE);
 
@@ -99,6 +108,7 @@ void setup() {
 	glClearColor(0,0,0,0);
 
 	active_piece = &tetris::pieces[1];
+	glutTimerFunc(1000/speed, update, 0);
 }
 
 int main(int argc, char** argv) {
