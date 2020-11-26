@@ -62,6 +62,29 @@ void display() {
 	glFlush();
 }
 
+void keyboard(unsigned char key, int mouse_x, int mouse_y) {
+	switch (key)
+	{
+	case 'w':
+		active_piece->rotate();
+		break;
+
+	case 'a':
+		x -= 1;
+		break;
+	
+	case 'd':
+		x += 1;
+		break;
+	
+	case 's':
+		y -= 1;
+		break;
+	}
+
+	glutPostRedisplay();
+}
+
 void setup() {
     glPointSize(POINT_SIZE);
 
@@ -88,6 +111,7 @@ int main(int argc, char** argv) {
 	glutCreateWindow(TITLE);
 
 	glutDisplayFunc(display);
+	glutKeyboardFunc(keyboard);
 
 	setup();
 	glutMainLoop();
