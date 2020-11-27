@@ -1,8 +1,8 @@
 
 // Simple openGL tetris game!
 // Created by: HiperLunar
-// version: 0.2
-// date: 24/20/2020 (MM/DD/YYYY)
+// version: 0.3
+// date: 27/20/2020 (MM/DD/YYYY)
 
 #include "piece.h"
 #include "map.h"
@@ -30,7 +30,6 @@ static const GLubyte colors[] = {
 	0xFF, 0x00, 0x00
 };
 
-// static int map[GAME_WIDTH * GAME_HEIGHT];
 static tetris::Map map(GAME_WIDTH, GAME_HEIGHT);
 
 tetris::Piece* active_piece;
@@ -38,7 +37,64 @@ tetris::Piece* active_piece;
 int x = 1;
 int y = 10;
 
-int speed = 1;
+unsigned int speed = 1;
+
+bool down() {
+	bool r = true;
+	std::vector<int>& shape = active_piece->shape;
+	int len = active_piece->len();
+	for (int i = 0; i < shape.size(); ++i) {
+		if (shape[i] > 0) {
+			int _x = (i % len) + x;
+			int _y = (i / len) + y;
+			if (!(_y > 0)) {
+				r = false;
+			}
+			if (map.get(_x, _y - 1) > 0) {
+				r = false;
+			}
+		}
+	}
+	if (r) y -= 1;
+}
+
+bool rotate() {}
+bool left() {
+	bool r = true;
+	std::vector<int>& shape = active_piece->shape;
+	int len = active_piece->len();
+	for (int i = 0; i < shape.size(); ++i) {
+		if (shape[i] > 0) {
+			int _x = (i % len) + x;
+			int _y = (i / len) + y;
+			if (!(_x > 0)) {
+				r = false;
+			}
+			if (map.get(_x - 1, _y) > 0) {
+				r = false;
+			}
+		}
+	}
+	if (r) x -= 1;
+}
+bool right() {
+	bool r = true;
+	std::vector<int>& shape = active_piece->shape;
+	int len = active_piece->len();
+	for (int i = 0; i < shape.size(); ++i) {
+		if (shape[i] > 0) {
+			int _x = (i % len) + x;
+			int _y = (i / len) + y;
+			if (!(_x + 1 < map.getWidth())) {
+				r = false;
+			}
+			if (map.get(_x + 1, _y) > 0) {
+				r = false;
+			}
+		}
+	}
+	if (r) x += 1;
+}
 
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -53,10 +109,11 @@ void display() {
 	}
 
 	std::vector<int>& shape = active_piece->shape;
+	int len = active_piece->len();
 	for (int i=0; i < shape.size(); ++i) {
 		if (shape[i] > 0) {
 			glColor3ub(colors[6], colors[7], colors[8]);
-			glVertex2d((i % 3) + x, (i / 3) + y);
+			glVertex2d((i % len) + x, (i / len) + y);
 		}
 	}
 	glEnd();
@@ -72,15 +129,15 @@ void keyboard(unsigned char key, int mouse_x, int mouse_y) {
 		break;
 
 	case 'a':
-		x -= 1;
+		left();
 		break;
 	
 	case 'd':
-		x += 1;
+		right();
 		break;
 	
 	case 's':
-		y -= 1;
+		down();
 		break;
 	}
 
@@ -88,7 +145,8 @@ void keyboard(unsigned char key, int mouse_x, int mouse_y) {
 }
 
 void update(int value) {
-	y -= 1;
+
+	down();
 
 	glutPostRedisplay();
 	glutTimerFunc(1000/speed, update, 0);
@@ -107,7 +165,8 @@ void setup() {
 
 	glClearColor(0,0,0,0);
 
-	active_piece = &tetris::pieces[1];
+	active_piece = &tetris::pieces[0];
+
 	glutTimerFunc(1000/speed, update, 0);
 }
 

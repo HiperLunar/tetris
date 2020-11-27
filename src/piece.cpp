@@ -1,8 +1,9 @@
 
 #include "piece.h"
 
-tetris::Piece::Piece(std::vector<int> shape)
+tetris::Piece::Piece(int len, std::vector<int> shape)
 {
+	length = len;
     this -> shape = shape;
 };
 
@@ -12,17 +13,16 @@ int tetris::Piece::size() {
 
 void tetris::Piece::rotate()
 {
-    int len = shape.size();
-    std::vector<int> result(len);
+	std::vector<int> result(shape.size());
 
-	int xp = 1;
-	int yp = 1;
+	float xp = (length-1)/2.0;
+	float yp = (length-1)/2.0;
 
-	for (int i = 0; i < len; ++i) {
-		int x = yp - ( i / 3) + xp;
-		int y = (i % 3) - xp + yp;
+	for (int i = 0; i < shape.size(); ++i) {
+		float x = yp - (i / length) + xp;
+		float y = (i % length) - xp + yp;
 
-		result[i] = shape[y * 3 + x];
+		result[i] = shape[y*length+x];
 	}
 
     shape = result;

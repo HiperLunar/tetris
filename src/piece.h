@@ -5,46 +5,49 @@ namespace tetris
 {
     class Piece
     {
+        private:
+            int length;
         public:
             std::vector<int> shape;
-            Piece(std::vector<int> shape);
+            Piece(int len, std::vector<int> shape);
 
             int size();
+            int len() {return length;}
             void rotate();
     };
 
     static Piece pieces[] = {
-        Piece({
+        Piece(4, {
             0, 0, 0, 0,
             1, 1, 1, 1,
             0, 0, 0, 0,
             0, 0, 0, 0
         }),
-        Piece({
+        Piece(3, {
             0, 0, 0,
             1, 1, 1,
             1, 0, 0
         }),
-        Piece({
+        Piece(3, {
             0, 0, 0,
             1, 1, 1,
             0, 0, 1
         }),
-        Piece({
+        Piece(2, {
             1, 1,
             1, 1
         }),
-        Piece({
+        Piece(3, {
             0, 0, 0,
             1, 1, 0,
             0, 1, 1
         }),
-        Piece({
+        Piece(3, {
             0, 0, 0,
             1, 1, 1,
             0, 1, 0
         }),
-        Piece({
+        Piece(3, {
             0, 0, 0,
             0, 1, 1,
             1, 1, 0
